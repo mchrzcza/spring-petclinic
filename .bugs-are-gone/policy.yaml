@@ -1,0 +1,6 @@
+version: 1 # required, must be 1
+
+commands:
+  prepare: "./gradlew build"
+  build: "./gradlew build"
+  test: "./gradlew test"
