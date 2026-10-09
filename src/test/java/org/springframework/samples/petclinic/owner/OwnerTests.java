@@ -36,6 +36,18 @@ class OwnerTests {
 	}
 
 	@Test
+	void getPetByNameIgnoresCase() {
+		Owner owner = new Owner();
+		Pet pet = new Pet();
+		pet.setId(5);
+		pet.setName("Leo");
+		owner.addPet(pet);
+
+		assertEquals(pet, owner.getPet("leo", false));
+		assertEquals(pet, owner.getPet("leo", true));
+	}
+
+	@Test
 	void addPetDoesNotAddDuplicatePet() {
 		Owner owner = new Owner();
 		Pet pet = new Pet();
