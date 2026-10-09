@@ -1,6 +1,1 @@
 version: 1 # required, must be 1
-
-commands:
-  prepare: "./gradlew --no-daemon dependencies"
-  build: "./gradlew --offline --no-daemon build -x test"
-  test: "./gradlew --offline --no-daemon test"
