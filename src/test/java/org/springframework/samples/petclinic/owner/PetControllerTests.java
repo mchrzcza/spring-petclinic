@@ -134,6 +134,19 @@ class PetControllerTests {
 		}
 
 		@Test
+		void processCreationFormWithDuplicateNameIgnoringCase() throws Exception {
+			mockMvc
+				.perform(post("/owners/{ownerId}/pets/new", TEST_OWNER_ID).param("name", "PETTY")
+					.param("birthDate", "2015-02-12"))
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasErrors("pet"))
+				.andExpect(model().attributeHasFieldErrors("pet", "name"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "name", "duplicate"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
+		}
+
+		@Test
 		void processCreationFormWithMissingPetType() throws Exception {
 			mockMvc
 				.perform(post("/owners/{ownerId}/pets/new", TEST_OWNER_ID).param("name", "Betty")
