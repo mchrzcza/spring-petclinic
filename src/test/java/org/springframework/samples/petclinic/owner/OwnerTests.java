@@ -18,9 +18,21 @@ package org.springframework.samples.petclinic.owner;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class OwnerTests {
+
+	@Test
+	void getPetFindsPersistedPetWithDifferentCapitalisation() {
+		Owner owner = new Owner();
+		Pet pet = new Pet();
+		pet.setId(5);
+		pet.setName("Leo");
+		owner.addPet(pet);
+
+		assertSame(pet, owner.getPet("leo", true));
+	}
 
 	@Test
 	void addPetAddsPersistedPet() {
