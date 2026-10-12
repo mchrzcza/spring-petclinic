@@ -36,6 +36,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -131,6 +133,27 @@ class PetControllerTests {
 				.andExpect(model().attributeHasFieldErrorCode("pet", "name", "duplicate"))
 				.andExpect(status().isOk())
 				.andExpect(view().name("pets/createOrUpdatePetForm"));
+		}
+
+		@Test
+		void processCreationFormWithDuplicateNameIgnoringCase() throws Exception {
+			Owner owner = new Owner();
+			Pet pet = new Pet();
+			pet.setId(TEST_PET_ID);
+			pet.setName("Leo");
+			owner.addPet(pet);
+			given(owners.findById(TEST_OWNER_ID)).willReturn(Optional.of(owner));
+
+			mockMvc
+				.perform(post("/owners/{ownerId}/pets/new", TEST_OWNER_ID).param("name", "leo")
+					.param("type", "hamster")
+					.param("birthDate", "2015-02-12"))
+				.andExpect(status().isOk())
+				.andExpect(model().attributeHasNoErrors("owner"))
+				.andExpect(model().attributeHasFieldErrorCode("pet", "name", "duplicate"))
+				.andExpect(view().name("pets/createOrUpdatePetForm"));
+
+			verify(owners, never()).saveAndFlush(any(Owner.class));
 		}
 
 		@Test
